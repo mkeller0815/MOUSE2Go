@@ -12,7 +12,7 @@
 
 // set this to a proper value for your Arduino 
 #define RAM_SIZE 1536 // Uno, mini or any other 328P
-//#definde RAM_SIZE 4096 //Mega 2560
+//#define RAM_SIZE 6144 //Mega 2560
 //#define RAM_SIZE 32768 //Due
 
 uint8_t curkey = 0;
@@ -47,6 +47,10 @@ extern "C" {
   }
 }
 
+void handle_transfer() {
+    Serial.println("Filetransfer detected:");
+}
+
 void setup () {
   Serial.begin (9600);
   Serial.println ();
@@ -58,6 +62,8 @@ void loop () {
   exec6502(100); //if timing is enabled, this value is in 6502 clock ticks. otherwise, simply instruction count.
   if (Serial.available()) {
     curkey = Serial.read() & 0x7F;
+    //check if external transfer of data is initiated
+    if(curkey == 0) handle_transfer();
   } 
 }
 
