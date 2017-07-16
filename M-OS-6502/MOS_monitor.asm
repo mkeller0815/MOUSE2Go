@@ -2,7 +2,7 @@
 ; M-OS monitor programm
 ;
 
-; Character set 
+; Character set
 .alias AsciiCC  $03  ; break (Control-C) ASCCI character
 .alias AsciiBS  $08  ; backspace ASCII character
 .alias AsciiLF  $0A  ; line feed ASCII character
@@ -14,7 +14,7 @@
 
 ;
 ; M-OS monitor main loop
-; 
+;
 .scope
 
 m_start:
@@ -24,10 +24,10 @@ m_start:
 
 m_main:             ; monitor main loop
 
-_wait:  
+_wait:
     jsr j_rchr          ; read character
     bcs _wait           ; wait for character
-    cmp #AsciiCR        ; check if carriage return 
+    cmp #AsciiCR        ; check if carriage return
     beq m_parse         ; parse buffer
     cmp #AsciiLF        ; check if line feed
     beq m_parse         ; parse buffer
@@ -37,7 +37,7 @@ _wait:
     inx                 ; increment bufferpointer
     stx K_BUF_P         ; save buffer pointer
     cpx #K_BUF_LEN      ; check for end of buffer
-    beq m_parse         ; if end of buffer -> parse 
+    beq m_parse         ; if end of buffer -> parse
     jmp m_main          ; next character
 
 m_parse:
@@ -45,13 +45,13 @@ m_parse:
     ldx #$00            ; set index to 0
     lda K_BUFFER,x      ; load first character
 *   cmp m_cmd_list,x    ; compare to current command
-    beq m_cmdjmp        ; command found 
-    inx                 ; increment index 
+    beq m_cmdjmp        ; command found
+    inx                 ; increment index
     cpx m_cmd_num       ; end of command list?
     bne -           ; next command
-.invoke print MS_CMD_ERROR  ; unknown command   
+.invoke print MS_CMD_ERROR  ; unknown command
     pha         ; save A
-    lda #$22        
+    lda #$22
     jsr j_wchr
     pla
     jsr j_wchr
@@ -63,7 +63,7 @@ m_parse:
 m_cmdjmp:
 .invoke print MS_OK
     txa         ; index to accumulator
-    asl         ; x2    
+    asl         ; x2
     tax
     lda m_cmd_jumptable,x
     sta K_VAR1_L
@@ -75,12 +75,12 @@ m_parse_end:
     jsr m_clear_buffer      ; clear input buffer
     jsr m_show_prompt   ; show new prompt
     jmp m_main      ; back to mainloop
-        
+
 .scend
 
 m_cmd_num:
     .byte   12
-m_cmd_list: 
+m_cmd_list:
     .byte "acdfghimorvt"
 
 m_cmd_jumptable:
@@ -98,7 +98,7 @@ m_cmd_jumptable:
     .word m_cmd_test
 
 
-m_cmd_chess: 
+m_cmd_chess:
     jmp CHESS       ; jump to chess program
 
 m_cmd_vtl2:
@@ -108,7 +108,7 @@ m_cmd_reset:
     jmp ($fffc)     ; jump to reset vector
 
 ;
-; dump a part of the memory as ascii dump out ignoring 
+; dump a part of the memory as ascii dump out ignoring
 ; nonprintable characters
 ;
 ; @param  K_VAR1_L + K_VAR1_H   16bit value of address to dump from
@@ -129,8 +129,8 @@ m_cmd_asciidump:
     sta K_VAR2_L        ; store value
     jsr j_a2b           ; parse number of rows
     sta K_VAR2_H        ; store value
-    tax                 ; load number of lines       
-_outer: .invoke linefeed    
+    tax                 ; load number of lines
+_outer: .invoke linefeed
     ldy K_VAR2_L        ;load number of bytes per line
     lda K_VAR1_H        ;load high byte of address
     jsr j_hex8out       ;print high byte
@@ -139,7 +139,7 @@ _outer: .invoke linefeed
     .invoke space       ;print " "
     lda #$7c            ;print '|' as ruler
     jsr j_wchr
-_inner: 
+_inner:
     stx K_TMP3          ; save X
     ldx #$00
     lda (K_VAR1_L,x)    ;load next byte
@@ -168,7 +168,7 @@ m_cmd_test:
     lda #$ff
     jsr j_hex4out
     jmp m_parse_end
-    
+
 
 m_cmd_memdump:
     ldx #$02            ; bad hack to skip first blank
@@ -186,18 +186,18 @@ m_cmd_memdump:
 
 m_cmd_disass:
     ldx #$02        ; fist character of address
-        jsr j_a2b        ; parse high byte
-        sta K_VAR1_H            ; store high byte
-        jsr j_a2b        ; parse low byte
-        sta K_VAR1_L            ; store low byte
+    jsr j_a2b        ; parse high byte
+    sta K_VAR1_H            ; store high byte
+    jsr j_a2b        ; parse low byte
+    sta K_VAR1_L            ; store low byte
     jmp DSTART      ; jump to parsed address
 
 m_cmd_go:
     ldx #$02        ; fist character of address
-        jsr j_a2b        ; parse high byte
-        sta K_VAR1_H            ; store high byte
-        jsr j_a2b        ; parse low byte
-        sta K_VAR1_L            ; store low byte
+    jsr j_a2b        ; parse high byte
+    sta K_VAR1_H            ; store high byte
+    jsr j_a2b        ; parse low byte
+    sta K_VAR1_L            ; store low byte
     jmp (K_VAR1_L)      ; jump to parsed address
 
 m_cmd_help:
@@ -208,24 +208,26 @@ m_cmd_help:
 .scope
 m_cmd_input:
 .invoke linefeed        ;
-        ldx #$02                ; fist character of address
-        jsr j_a2b        ; parse high byte
-        sta K_VAR1_H            ; store high byte
-        jsr j_a2b        ; parse low byte
-        sta K_VAR1_L            ; store low byte    
+    ldx #$02                ; fist character of address
+    jsr j_a2b        ; parse high byte
+    sta K_VAR1_H            ; store high byte
+    jsr j_a2b        ; parse low byte
+    sta K_VAR1_L            ; store low byte
     jsr m_clear_buffer  ; first clear the buffer
-_start: ldx #$00        ; index 
-_wait:  jsr j_rchr              ; read character
-        bcs _wait               ; wait for character
+_start:
+    ldx #$00        ; index
+_wait:
+    jsr j_rchr              ; read character
+    bcs _wait               ; wait for character
     jsr j_wchr      ; output character
-        cmp #'.             ; check if carriage return
-        beq _end            ; branch to end
+    cmp #'.             ; check if carriage return
+    beq _end            ; branch to end
     cmp #AsciiSP        ; ignore blank
-    beq _wait       ; 
+    beq _wait       ;
     cmp #AsciiLF        ; ignore LF
-    beq _wait       ; 
+    beq _wait       ;
     cmp #AsciiCR        ; ignore CR
-    beq _wait       ; 
+    beq _wait       ;
     sta K_BUFFER,x      ; store character
     inx         ; increase index
     cpx #$02        ; already second character
@@ -236,27 +238,27 @@ _wait:  jsr j_rchr              ; read character
     sta (K_VAR1_L,x)      ; save byte to destination
     inc K_VAR1_L        ; increase destination address
     bne _start      ; next byte
-    inc K_VAR1_H        ; on overflow increase high byte 
-    jmp _start      ; next byte 
+    inc K_VAR1_H        ; on overflow increase high byte
+    jmp _start      ; next byte
 _end:
     jmp m_parse_end     ; back to parse
 .scend
 
 .scope
 m_cmd_output:
-.invoke linefeed        ;
-        ldx #$02                ; fist character of address
-        jsr j_a2b        ; parse high byte
-        sta K_VAR1_H            ; store high byte
-        jsr j_a2b        ; parse low byte
-        sta K_VAR1_L            ; store low byte
+    .invoke linefeed        ;
+    ldx #$02                ; fist character of address
+    jsr j_a2b        ; parse high byte
+    sta K_VAR1_H            ; store high byte
+    jsr j_a2b        ; parse low byte
+    sta K_VAR1_L            ; store low byte
     inx         ; skip ':'
-        jsr j_a2b        ; parse high byte
-        sta K_VAR2_H            ; store high byte
-        jsr j_a2b        ; parse low byte
-        sta K_VAR2_L            ; store low byte    
+    jsr j_a2b        ; parse high byte
+    sta K_VAR2_H            ; store high byte
+    jsr j_a2b        ; parse low byte
+    sta K_VAR2_L            ; store low byte
     ldx #$10        ; 16 values per line
-_loop:  
+_loop:
     txa
     pha
     ldx #$00
@@ -294,10 +296,10 @@ m_cmd_fill:
     jsr j_a2b        ; parse high byte
     sta K_VAR2_H            ; store high byte
     jsr j_a2b        ; parse low byte
-    sta K_VAR2_L            ; store low byte    
+    sta K_VAR2_L            ; store low byte
     jsr j_a2b        ; parse fill byte
 _loop:
-    ldx #$00  
+    ldx #$00
     sta (K_VAR1_L,x)      ; write value
     jsr m_loop_addr     ; next step in loop
     bcc _loop       ; loop
@@ -310,7 +312,7 @@ _loop:
 ; set cursor to new line and print a prompt
 ;
 m_show_prompt:
-.invoke print MS_PROMPT;
+    .invoke print MS_PROMPT;
     rts
 
 
@@ -323,9 +325,9 @@ m_clear_buffer:
     pha
     txa
     pha         ; save X
-    ldx #K_BUF_LEN      ; 
+    ldx #K_BUF_LEN      ;
     lda #$00
-*   sta K_BUFFER,x      ; write 00 to buffer position 
+*   sta K_BUFFER,x      ; write 00 to buffer position
     dex         ; decrement index
     bne -           ; end of buffer ?
     sta K_BUF_P     ; clear buffer pointer
@@ -333,7 +335,7 @@ m_clear_buffer:
     tax
     pla         ; restore X
     rts         ; return
-.scend  
+.scend
 ;
 ; dump a part of the memory as hex dump out
 ;
@@ -351,15 +353,15 @@ m_dump_mem:
     pha                 ;save X
     tya
     pha                 ;save Y
-    ldx K_VAR2_H        ;load number of lines       
-_outer: 
-    .invoke linefeed    
+    ldx K_VAR2_H        ;load number of lines
+_outer:
+    .invoke linefeed
     ldy K_VAR2_L        ;load number of bytes per line
     lda K_VAR1_H        ;load high byte of address
     jsr j_hex8out       ;print high byte
     lda K_VAR1_L        ;load low byte of address
     jsr j_hex8out       ;print low byte
-_inner: 
+_inner:
     .invoke space       ;print " "
     txa
     pha
@@ -388,7 +390,7 @@ _inner:
 ; increasing the start address until the end address is reached
 ;
 ; @param  K_VAR1_L + K_VAR1_H   16bit value of address to start from
-; @param  K_VAR2_L + K_VAR2_H   16bit value of end address 
+; @param  K_VAR2_L + K_VAR2_H   16bit value of end address
 ;
 .scope
 m_loop_addr:
@@ -408,7 +410,7 @@ _end:
     clc         ; clear carry
 _end2:
     pla
-    rts         
+    rts
 .scend
 
 
