@@ -19,13 +19,13 @@
 ;
 ;
 
-j_wstr:		jmp k_wstr
-j_wchr:		jmp k_wchr
-j_rchr:  	jmp k_rchr
-j_a2b:		jmp k_ascii2byte
-j_bin8out: 	jmp u_bin8out
-j_hex8out: 	jmp u_hex8out
-j_hex4out: 	jmp u_hex4out	
+j_wstr:		      jmp k_wstr
+j_wchr:		      jmp k_wchr
+j_rchr:  	      jmp k_rchr
+j_a2b:          jmp k_ascii2byte
+j_bin8out: 	    jmp u_bin8out
+j_hex8out: 	    jmp u_hex8out
+j_hex4out: 	    jmp u_hex4out	
 j_chr2nibble: 	jmp u_chr2nibble
 
 ;k_RESET

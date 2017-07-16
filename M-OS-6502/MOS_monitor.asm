@@ -48,43 +48,43 @@ m_parse:
     beq m_cmdjmp        ; command found
     inx                 ; increment index
     cpx m_cmd_num       ; end of command list?
-    bne -           ; next command
-.invoke print MS_CMD_ERROR  ; unknown command
-    pha         ; save A
+    bne -               ; next command
+    .invoke print MS_CMD_ERROR  ; unknown command
+    pha                 ; save A
+    lda #$22            ; print "
+    jsr j_wchr
+    pla                 ; print command character
+    jsr j_wchr
     lda #$22
-    jsr j_wchr
-    pla
-    jsr j_wchr
-    lda #$22
-    jsr j_wchr
+    jsr j_wchr          ; print "
     lda #$20
     jsr j_wchr
     jmp m_parse_end
 m_cmdjmp:
-.invoke print MS_OK
-    txa         ; index to accumulator
-    asl         ; x2
+    .invoke print MS_OK
+    txa                 ; index to accumulator
+    asl                 ; x2
     tax
     lda m_cmd_jumptable,x
     sta K_VAR1_L
     inx
     lda m_cmd_jumptable,x
     sta K_VAR1_H
-    jmp (K_VAR1_L) ; jump to command
+    jmp (K_VAR1_L)       ; jump to command
 m_parse_end:
-    jsr m_clear_buffer      ; clear input buffer
-    jsr m_show_prompt   ; show new prompt
-    jmp m_main      ; back to mainloop
+    jsr m_clear_buffer   ; clear input buffer
+    jsr m_show_prompt    ; show new prompt
+    jmp m_main           ; back to mainloop
 
 .scend
 
 m_cmd_num:
-    .byte   12
+    .byte   11
 m_cmd_list:
-    .byte "acdfghimorvt"
+    .byte "acdfghimorv"
 
 m_cmd_jumptable:
-    .word m_cmd_asciidump
+    .word m_cmd_assemble
     .word m_cmd_chess
     .word m_cmd_disass
     .word m_cmd_fill
@@ -95,7 +95,6 @@ m_cmd_jumptable:
     .word m_cmd_output
     .word m_cmd_reset
     .word m_cmd_vtl2
-    .word m_cmd_test
 
 
 m_cmd_chess:
@@ -106,68 +105,6 @@ m_cmd_vtl2:
 
 m_cmd_reset:
     jmp ($fffc)     ; jump to reset vector
-
-;
-; dump a part of the memory as ascii dump out ignoring
-; nonprintable characters
-;
-; @param  K_VAR1_L + K_VAR1_H   16bit value of address to dump from
-; @param  K_VAR2_L      number of bytes per line
-; @param  K_VAR2_H      number of lines to print
-;
-; @return -
-;
-; A,X,Y are preserved K_VAR* are destroyed
-.scope
-m_cmd_asciidump:
-    ldx #$02            ; bad hack to skip first blank
-    jsr j_a2b           ; parse high byte
-    sta K_VAR1_H        ; store high byte
-    jsr j_a2b           ; parse low byte
-    sta K_VAR1_L        ; store low byte
-    jsr j_a2b           ; parse number of columns
-    sta K_VAR2_L        ; store value
-    jsr j_a2b           ; parse number of rows
-    sta K_VAR2_H        ; store value
-    tax                 ; load number of lines
-_outer: .invoke linefeed
-    ldy K_VAR2_L        ;load number of bytes per line
-    lda K_VAR1_H        ;load high byte of address
-    jsr j_hex8out       ;print high byte
-    lda K_VAR1_L        ;load low byte of address
-    jsr j_hex8out       ;print low byte
-    .invoke space       ;print " "
-    lda #$7c            ;print '|' as ruler
-    jsr j_wchr
-_inner:
-    stx K_TMP3          ; save X
-    ldx #$00
-    lda (K_VAR1_L,x)    ;load next byte
-    bpl _next1          ; >127
-    lda #$2e            ; show unprintable charachter as '.'
-_next1: cmp #$20        ; check if > 32
-    bcs _print          ;
-    lda #$2e            ; show lower then 32 as '.'
-_print: jsr j_wchr      ;print byte
-    ldx K_TMP3          ;restore X
-    inc K_VAR1_L        ;increment address low byte
-    bne +               ;check for turnover
-    inc K_VAR1_H        ;increment address high byte
-*   dey                 ;next byte
-    bne _inner          ;end of line?
-    lda #$7c            ;print '|' as ruler
-    jsr j_wchr
-    dex                 ;next line
-    bne _outer          ;end of lines?
-    .invoke linefeed
-    jmp m_parse_end     ; back to parse
-.scend
-
-
-m_cmd_test:
-    lda #$ff
-    jsr j_hex4out
-    jmp m_parse_end
 
 
 m_cmd_memdump:
@@ -191,6 +128,14 @@ m_cmd_disass:
     jsr j_a2b        ; parse low byte
     sta K_VAR1_L            ; store low byte
     jmp DSTART      ; jump to parsed address
+
+m_cmd_assemble:
+    ldx #$02        ; fist character of address
+    jsr j_a2b        ; parse high byte
+    sta K_VAR1_H            ; store high byte
+    jsr j_a2b        ; parse low byte
+    sta K_VAR1_L            ; store low byte
+    jmp ASTART  ; start assembler
 
 m_cmd_go:
     ldx #$02        ; fist character of address
@@ -358,23 +303,55 @@ _outer:
     .invoke linefeed
     ldy K_VAR2_L        ;load number of bytes per line
     lda K_VAR1_H        ;load high byte of address
+    sta K_VAR3_H        ;save high byte for second loop
     jsr j_hex8out       ;print high byte
     lda K_VAR1_L        ;load low byte of address
+    sta K_VAR3_L        ;save low byte for second loop
     jsr j_hex8out       ;print low byte
 _inner:
     .invoke space       ;print " "
-    txa
-    pha
+    stx K_TMP3          ; save X
     ldx #$00
     lda (K_VAR1_L,x)      ;load next byte
     jsr j_hex8out       ;print byte
-    pla
-    tax
+    ldx K_TMP3          ;restore X
     inc K_VAR1_L        ;increment address low byte
     bne +           ;check for turnover
     inc K_VAR1_H        ;increment address high byte
 *   dey         ;next byte
     bne _inner      ;end of line?
+    ;-----------------------------------------------------
+    ;-----------------------------------------------------
+                    ;
+    ldy K_VAR2_L        ;load number of bytes per line
+    lda K_VAR3_H        ;restore address
+    sta K_VAR1_H
+    lda K_VAR3_L
+    sta K_VAR1_L
+    .invoke space       ;print " "
+    lda #$7c            ;print '|' as ruler
+    jsr j_wchr
+_inner2:
+    stx K_TMP3          ; save X
+    ldx #$00
+    lda (K_VAR1_L,x)    ;load next byte
+    bpl _next1          ; >127
+    lda #$2e            ; show unprintable charachter as '.'
+_next1: cmp #$20        ; check if > 32
+    bcs _print          ;
+    lda #$2e            ; show lower then 32 as '.'
+_print: jsr j_wchr      ;print byte
+    ldx K_TMP3          ;restore X
+    inc K_VAR1_L        ;increment address low byte
+    bne +               ;check for turnover
+    inc K_VAR1_H        ;increment address high byte
+*   dey                 ;next byte
+    bne _inner2         ;end of line?
+    lda #$7c            ;print '|' as ruler
+    jsr j_wchr
+    ;-----------------------------------------------------
+    ;-----------------------------------------------------
+
     dex         ;next line
     bne _outer      ;end of lines?
     pla         ;restore Y
@@ -415,10 +392,8 @@ _end2:
 
 
 MS_PROMPT:  .byte LINE_END,">",0
-MS_WELCOME: .byte "MOUSE MON V 0.7",LINE_END,LINE_END,0
+MS_WELCOME: .byte "MOUSE MON V 0.8",LINE_END,LINE_END,0
 MS_CMD_ERROR:   .byte LINE_END,"?unknown command: ",0
 MS_OK:      .byte " OK",0
-MS_HELP1:   .byte   LINE_END,"commands:", LINE_END,"a <addr> %cols %rows - ascii dump from address",LINE_END,"c - start microchess", LINE_END,"d <addr> - disassemble from address", LINE_END,"f <addr>:<addr> %val - fill memory with %val", LINE_END,"g <addr> - jump to <addr>", LINE_END,"h - this help",0
+MS_HELP1:   .byte   LINE_END,"commands:", LINE_END,"a <addr> - start assembler at address",LINE_END,"c - start microchess", LINE_END,"d <addr> - disassemble from address", LINE_END,"f <addr>:<addr> %val - fill memory with %val", LINE_END,"g <addr> - jump to <addr>", LINE_END,"h - this help",0
 MS_HELP2:   .byte   LINE_END,"i <addr> - input <addr> input data to memory '.' ends the input",LINE_END,"m <addr> %cols %rows - dump memory from address", LINE_END,"o <addr>:<addr> - output memory range", LINE_END,"r - jump to reset vector", LINE_END,"v - start VTL2 language", LINE_END," <addr> - 16bit address, %xx - 8 bit value",0
-
-; VCFBHELLO:  .byte LINE_END,"Hello FCVB 2015",0

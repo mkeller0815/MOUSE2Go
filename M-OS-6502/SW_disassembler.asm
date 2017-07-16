@@ -30,7 +30,7 @@
 ; and not the data bytes in memory. This allows the output to be fed
 ; back to an assembler.
 ; SOURCEONLY = 1
-        
+
 ; Uncomment next line to link with start address of $A000 for Multi I/0 Board EEPROM.
 ; .org $A000
 
@@ -197,7 +197,7 @@ DISASM:
   LDA OPCODES1,X        ; get addressing mode
   STA AM                ; store it
   JMP AROUND
-UPPER: 
+UPPER:
   ASL                   ; double it since table is two bytes per entry
   TAX
   LDA OPCODES2,X        ; get the instruction type (e.g. OP_LDA)
@@ -266,7 +266,7 @@ MNEM:
 DOMB:
   LDA OPCODE            ; get the op code
   AND #$70              ; Upper 3 bits is the bit number
-  LSR                   
+  LSR
   LSR
   LSR
   LSR
@@ -287,7 +287,7 @@ TRYBB:
 DOBB:                   ; handle special BBRn and BBSn instructions
   LDA OPCODE            ; get the op code
   AND #$70              ; Upper 3 bits is the bit number
-  LSR                   
+  LSR
   LSR
   LSR
   LSR
@@ -336,7 +336,7 @@ TRYIMP:
   CMP #AM_IMPLICIT
   BNE TRYINV
   JMP DONEOPS           ; no operands
-TRYINV: 
+TRYINV:
   CMP #AM_INVALID
   BNE TRYACC
   JMP DONEOPS           ; no operands
@@ -376,7 +376,7 @@ TRYZPX:
   JSR PrintDollar
   JSR PrintByte         ; display it
   JSR PrintCommaX
-  JMP DONEOPS       
+  JMP DONEOPS
 TRYZPY:
   CMP #AM_ZEROPAGE_Y
   BNE TRYREL
@@ -384,7 +384,7 @@ TRYZPY:
   LDA (K_VAR1_L),Y          ; get 1st operand byte (address)
   JSR PrintByte         ; display it
   JSR PrintCommaY
-  JMP DONEOPS       
+  JMP DONEOPS
 TRYREL:
   CMP #AM_RELATIVE
   BNE TRYABS
@@ -617,7 +617,7 @@ GetKey:
 ; Registers changed: None
 PrintAddress:
   PHA
-  lda K_VAR1_H 
+  lda K_VAR1_H
   JSR j_hex8out
   lda K_VAR1_L
   JSR j_hex8out
@@ -716,14 +716,16 @@ MNEMONICS:
  .byte "TSB" ; $44 [65C02 only]
  .byte "STP" ; $45 [WDC 65C02 only]
  .byte "WAI" ; $46 [WDC 65C02 only]
+ MNEMONICSEND:
 
 ; Lengths of instructions given an addressing mode. Matches values of AM_*
-LENGTHS: 
+LENGTHS:
  .byte 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 3
 
 ; Opcodes. Listed in order. Defines the mnemonic and addressing mode.
 ; 2 bytes per table entry
 ; .export OPCODES1
+OPCODES:
 OPCODES1:
  .byte OP_BRK, AM_IMPLICIT           ; $00
  .byte OP_ORA, AM_INDEXED_INDIRECT   ; $01

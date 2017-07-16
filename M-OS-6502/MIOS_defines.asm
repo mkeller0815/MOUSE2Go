@@ -1,7 +1,7 @@
 ;
-; M-OS 
+; M-OS
 ;
-; global defines  
+; global defines
 ;
 ;
 ;The MIT License (MIT)
@@ -38,12 +38,12 @@
 
 ;
 ; Zero Page defines
-; 
-; ZP adresses used by several functions of the I/O system and the kernel
+;
+; ZP addresses used by several functions of the I/O system and the kernel
 ;
 				; this is needed by k_wstr function
 .alias K_STRING_L	$00	; ZP highbyte of string output address
-.alias K_STRING_H	$01	; ZP lowbyte of string outpu address
+.alias K_STRING_H	$01	; ZP lowbyte of string output address
 .alias K_VAR1_L		$02	; ZP common variable (16 bit)
 .alias K_VAR1_H		$03
 .alias K_VAR2_L		$04	; ZP common variable (16 bit)
@@ -60,10 +60,11 @@
 
 
 ; kernel input buffer / reserved from $0F to $2F
-; 
+;
 .alias K_BUF_P		$0F	; ZP variable holding pointer to end of buffer
 .alias K_BUFFER		$10	; ZP start of 32 bytes kernel input buffer
 .alias K_BUF_LEN	$20	; max length of input buffer (this is not an address)
 
+; generic defines
 
 .alias LINE_END		$0A	; define end of line character

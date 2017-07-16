@@ -1,8 +1,8 @@
 ;
 ; DRIVER CODE FOR - Py65mon fake ACIA
 ;
-; non blocking 
-; $F001 - putc - write character to console 
+; non blocking
+; $F001 - putc - write character to console
 ; $F004 - getc - read character from console (0 if no character)
 
 ;.alias ACIAIN   $F004
@@ -14,25 +14,25 @@
 ; initialize the ACIA
 ;
 ; not needed for py65mon, but still here to match the driver interface pattern
-; 
+;
 ; @return: --
 .scope
 acia_init:
-        rts             ; finished
+  rts             ; finished
 .scend
 
 ;
 ; send byte (blocking)
 ;
 ; py65mon is always nonblocking, so we don't have to care for that
-; 
+;
 ; @param A - the byte to sent
-; 
+;
 ; @return -
 .scope
 acia_send_b:
-    sta ACIAOUT
-	rts		; return
+  sta ACIAOUT
+	rts		          ; return
 .scend
 
 
@@ -46,8 +46,8 @@ acia_send_b:
 ; @return -
 .scope
 acia_send:
-        sta ACIAOUT     ; send byte
-        rts             ; return
+  sta ACIAOUT     ; send byte
+  rts             ; return
 .scend
 
 
@@ -86,14 +86,14 @@ acia_received:
 ;
 ; ATTENTION: content of A is detroyed by this function
 ;
-; @param  - 
+; @param  -
 ;
 ; @return A - return the bytes that was received
 .scope
 acia_receive_b:
 	lda ACIAIN	        ; read byte
-    beq acia_receive_b  ; check if >0
-	rts		            ; return
+  beq acia_receive_b  ; check if >0
+	rts		              ; return
 .scend
 
 ;
@@ -109,4 +109,3 @@ acia_receive:
         lda ACIAIN	    ; read byte
         rts             ; return
 .scend
-

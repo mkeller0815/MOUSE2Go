@@ -1,8 +1,8 @@
 ;
 ; M-OS kernel for a minimal system
-; 
-; providing high level function for input and output of data 
-; 
+;
+; providing high level function for input and output of data
+;
 ; providing reset and interrupt routines and an base entry point
 ; to start after reset / power on
 ;
@@ -16,7 +16,7 @@
 ; ACIA driver is directly imported here, because this version of the kernel
 ; makes direct use of the low level function form the driver.
 ;
-; low level function should not be used outside the kernel to provide 
+; low level function should not be used outside the kernel to provide
 ; compatibility for software to other hardware configurations
 ;
 ;.require "MIOS_driver_ACIA6850.asm"
@@ -61,16 +61,16 @@ u_bin8out:
 	ldx #$08		; counter for 8 bit
 _loop:	clc			; clear carry flag
 	asl 			; shift byte by one position
-	bcs _p1			
+	bcs _p1
 	tay			; save A
 	lda #'0
 	jmp _cont
-_p1:	tay			; save A 
-	lda #'1			; print "1"		
+_p1:	tay			; save A
+	lda #'1			; print "1"
 _cont:	jsr k_wchr
 	tya			; get A back
-	dex			; decrement counter 
-	bne _loop		
+	dex			; decrement counter
+	bne _loop
     pla
 	tay			; restore Y
 	pla			; restore X
@@ -91,9 +91,9 @@ _cont:	jsr k_wchr
 u_hex8out:
 	pha			; save A
 	lsr 			; get hi nibble
-	lsr 		
-	lsr 		
-	lsr 		
+	lsr
+	lsr
+	lsr
 	jsr u_hex4out		; print high nibble
 	pla			; restore A
 	jsr u_hex4out		; print low nibble
@@ -112,14 +112,14 @@ u_hex8out:
 ; @ return -
 .scope
 ; HEX digits for printing hexnumbers
-u_hex4out:	
-    stx K_TMP2          ; save X
-	and #$0f		    ; mask high nibble out
-	tax			        ; set digit index
+u_hex4out:
+  stx K_TMP2      	; save X
+	and #$0f		    	; mask high nibble out
+	tax			        	; set digit index
 	lda u_hexdigit,x	; load digit
 	jsr k_wchr		    ; print character
-    ldx K_TMP2          ; restore X
-	rts			        ; return
+  ldx K_TMP2      	; restore X
+	rts			        	; return
 .scend
 u_hexdigit:	.byte "0123456789abcdef"
 
@@ -131,7 +131,7 @@ u_hexdigit:	.byte "0123456789abcdef"
 ;
 ; convert a character in A to one nibble
 ; works only for '0-'9','A'-'F' and 'a'-'f' all other chracters may
-; cause unexpected results 
+; cause unexpected results
 ;
 ; @param A containing the character (will be destroyed)
 ;
@@ -164,7 +164,7 @@ u_chr2nibble:
 ; Y,A - are perserved
 ;
 ; @param - K_STRING_L (memorylocation with the startaddress of the string)
-; 
+;
 ; @return -
 .scope
 k_wstr:
@@ -212,8 +212,8 @@ k_wchr:
 ; read one character from input
 ; this is nonblocking, C flag is set if no charachter was read
 ;
-; @param - 
-; 
+; @param -
+;
 ; @return - A the received byte or "0" with C flag set if no byte was recieved.
 .scope
 k_rchr:
@@ -240,11 +240,11 @@ k_rchr:
 k_ascii2byte:
 ; convert two ascii characters in the kernel buffer to
 ; one byte. blank characters are skipped
-; X is modified and A is destroyed 
-; K_TMP1 is modified 
+; X is modified and A is destroyed
+; K_TMP1 is modified
 ;
 ; @param - X containing the offset in K_BUFFER
-; 
+;
 ; @return - A containing the parsed byte
 ; @return - X pointing to the byte after the last parsed character
 .scope
@@ -258,10 +258,10 @@ k_ascii2byte:
 	asl
 	asl			; shift to high nibble
 	sta K_TMP1		; save high nibble
-	lda K_BUFFER,x	
+	lda K_BUFFER,x
 	jsr u_chr2nibble	; convert next nibble
 	ora K_TMP1		; add high nibble
-	inx			; set indext to byte after last character 
+	inx			; set indext to byte after last character
 	rts
 .scend
 
@@ -271,8 +271,8 @@ k_ascii2byte:
 
 
 ;
-; RESET 
-; 
+; RESET
+;
 ;
 .scope
 k_RESET:
@@ -322,7 +322,7 @@ k_IRQ:
 ;
 ;
 
-k_welcome: .byte LINE_END,"MOUSE 65C02 micro computer (c) 2015",LINE_END,"M-OS V0.3",LINE_END,"READY.",LINE_END,0
+k_welcome: .byte LINE_END,"MOUSE 65C02 micro computer (c) 2017",LINE_END,"M-OS V0.3",LINE_END,"READY.",LINE_END,0
 
 ;
 ; fill ROM to vector table
@@ -333,4 +333,3 @@ k_welcome: .byte LINE_END,"MOUSE 65C02 micro computer (c) 2015",LINE_END,"M-OS V
 .word k_NMI		; NMI vector
 .word k_RESET		; RESET vector
 .word k_IRQ		; IRQ vector
-
