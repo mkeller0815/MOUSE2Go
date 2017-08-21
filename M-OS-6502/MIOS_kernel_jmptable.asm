@@ -15,7 +15,7 @@
 ; during development
 ;
 ; In software not directly bundled with the ROM image only these
-; addresses should be used to access these functions.
+; addresses should be used to access this functions.
 ;
 ;
 
