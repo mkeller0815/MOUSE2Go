@@ -50,32 +50,23 @@ k_START:
 
 ;
 ; print out the 8bit value in A as binary code
-; X,Y is preserved, A is destroyed
+; X,Y and A are destroyed
 ;
 .scope
 u_bin8out:
-    txa         ; move X to A
-    pha         ; save (X)
-    tya         ; move Y to A
-	pha			; save (Y)
-	ldx #$08		; counter for 8 bit
+	    ldx #$08    ; counter for 8 bit
 _loop:	clc			; clear carry flag
-	asl 			; shift byte by one position
-	bcs _p1
-	tay			; save A
-	lda #'0
-	jmp _cont
-_p1:	tay			; save A
-	lda #'1			; print "1"
-_cont:	jsr k_wchr
-	tya			; get A back
-	dex			; decrement counter
-	bne _loop
-    pla
-	tay			; restore Y
-	pla			; restore X
-    tax
-	rts			; return
+        ldy #'0
+	    asl 		; shift byte by one position
+	    bcc _p0
+        iny
+_p0:    pha         ; save A    
+        tya			; 
+        jsr k_wchr
+	    pla			; get A back
+	    dex			; decrement counter
+	    bne _loop
+	    rts			; return
 .scend
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

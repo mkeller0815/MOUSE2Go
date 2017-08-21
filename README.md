@@ -3,15 +3,15 @@ MOUSE2Go - A 6502 computer emulated by an Arduino
 
 ## Important note! 
 
-This repository contain software that was not written by me. 
+This repository contains software that was not written by me. 
 
 
 ## 1.0 About
 
-MOUSE is an 65C02 based singleboard homebew computer that
-is freely available in another repo: [github - MOUSE] (https://github.com/mkeller0815/MOUSE)
+MOUSE is an 65C02 based singleboard homebrew computer that
+is freely available from another repo: [github - MOUSE](https://github.com/mkeller0815/MOUSE)
 
-To make it easier to ge started with software, MOSUE can now run on a plain Arduino. 
+To make it easier to ge started with software, MOUSE can now run on a plain Arduino. 
 
 This project uses software kindly provided by others.
 
@@ -29,6 +29,7 @@ by the Arduino IDE.
 There is also a shellscript that creates a C header file out of the MOUSE rom image and a symlink to 
 this image itself. 
 
+Note: Currently there's only a 6502 emulated, not an 65C02
 
 ## 1.2 MOUSE Software
 
@@ -38,7 +39,7 @@ can be assembled with the ophis assembler (https://michaelcmartin.github.io/Ophi
 There's a small shellscript that runns the assembler with all needed options.
 
 Using the lastet version of py65mon (https://github.com/mnaberez/py65) you can run the generated rom image 
-also on you local machine with 
+also on your local machine with 
 
 py65mon -i fff9 -o fff8 -m 6502 -r MOUSE_ROM.bin
 
