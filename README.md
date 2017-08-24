@@ -9,16 +9,16 @@ This repository contains software that was not written by me.
 ## 1.0 About
 
 MOUSE is an 65C02 based singleboard homebrew computer that
-is freely available from another repo: [github - MOUSE](https://github.com/mkeller0815/MOUSE)
+is freely available from another repo: [github - MOUSE] (https://github.com/mkeller0815/MOUSE)
 
-To make it easier to ge started with software, MOUSE can now run on a plain Arduino. 
+To make it easier to ge started with software, MOUSE can now run on a plain Arduino or compatible board. 
 
 This project uses software kindly provided by others.
 
  - 6502 emulator for Arduino by Mike Chambers (http://forum.arduino.cc/index.php?topic=193216.0)
  - microchess by Peter Jennings (http://www.benlo.com/microchess/)
  - VTL2 ported to the 6502 by Mike Barry (http://6502.org/source/interpreters/vtl02.htm)
- - 65C02 disassembler by Jeff Tranter (https://github.com/jefftranter/6502/tree/master/asm/disasm)
+ - 65C02 assembler/disassembler by Jeff Tranter (https://github.com/jefftranter/6502/tree/master/asm)
 
 ## 1.1 Arduino Firmware
 
@@ -36,7 +36,7 @@ Note: Currently there's only a 6502 emulated, not an 65C02
 The folder "M-OS-6502" contains the 6502 part of this project. The software ist written in assembler and 
 can be assembled with the ophis assembler (https://michaelcmartin.github.io/Ophis/)
 
-There's a small shellscript that runns the assembler with all needed options.
+There's a small shellscript that runs the assembler with all needed options.
 
 Using the lastet version of py65mon (https://github.com/mnaberez/py65) you can run the generated rom image 
 also on your local machine with 
@@ -62,7 +62,7 @@ the IDE) with 9600,8N1 and play with MOUSE.
 
 If your're connected to the emulated system the following commands can be used:
 
- - a <addr> %cols %rows - ascii dump from address with %columns and %rows
+ - a <addr> - start assembler at address
  - c - start microchess - runs microchess 
  - d <addr> - disassemble from address
  - f <addr>:<addr> %val - fill memory with %val
