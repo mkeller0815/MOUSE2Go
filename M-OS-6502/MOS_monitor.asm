@@ -410,5 +410,5 @@ MS_PROMPT:  .byte LINE_END,">",0
 MS_WELCOME: .byte "MOUSE MON V 0.8",LINE_END,LINE_END,0
 MS_CMD_ERROR:   .byte LINE_END,"?unknown command: ",0
 MS_OK:      .byte " OK",0
-MS_HELP1:   .byte   LINE_END,"commands:", LINE_END,"a <addr> - start assembler at address",LINE_END,"c - start microchess", LINE_END,"d <addr> - disassemble from address", LINE_END,"f <addr>:<addr> %val - fill memory with %val", LINE_END,"g <addr> - jump to <addr>", LINE_END,"h - this help",0
-MS_HELP2:   .byte   LINE_END,"i <addr> - input <addr> input data to memory '.' ends the input",LINE_END,"m <addr> %cols %rows - dump memory from address", LINE_END,"o <addr>:<addr> - output memory range", LINE_END,"r - jump to reset vector", LINE_END,"v - start VTL2 language", LINE_END," <addr> - 16bit address, %xx - 8 bit value",0
+MS_HELP1:   .byte   LINE_END,"commands:", LINE_END,"a <addr> - start assembler at address",LINE_END,"c - start microchess", LINE_END,"d <addr> - disassemble from address", LINE_END,"f <addr>:<addr> %val - fill memory with %val", LINE_END,"g <addr> - jump to <addr>", LINE_END,"h - this help",LINE_END,"i <addr> - input <addr> input data to memory '.' ends the input",0
+MS_HELP2:   .byte   LINE_END,"m <addr> %cols %rows - dump memory from address", LINE_END,"o <addr>:<addr> - output memory range", LINE_END,"r - jump to reset vector", LINE_END,"s <addr> - show one byte in hex and binary", LINE_END,"v - start VTL2 language", LINE_END," <addr> - 16bit address, %xx - 8 bit value",0
