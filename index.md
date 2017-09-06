@@ -1,3 +1,8 @@
+---
+layout: default
+title: Home
+---
+
 MOUSE2Go - A 6502 computer emulated by an Arduino
 =================================================
 
