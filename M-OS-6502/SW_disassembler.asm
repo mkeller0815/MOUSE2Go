@@ -212,10 +212,12 @@ AROUND:
   LDX K_VAR1_L
   LDY K_VAR1_H
 ;  .ifndef SOURCEONLY
+  JSR PrintDollar
   JSR PrintAddress      ; print address
   LDX #3
   JSR PrintSpaces       ; then three spaces
   LDA OPCODE            ; get instruction op code
+  JSR PrintDollar   
   JSR PrintByte         ; display the opcode byte
   JSR PrintSpace
   LDA LEN               ; how many bytes in the instruction?
@@ -223,23 +225,26 @@ AROUND:
   BEQ THREE
   CMP #2
   BEQ TWO
-  LDX #5
+  LDX #7
   JSR PrintSpaces
   JMP ONE
 TWO:
   LDY #1
   LDA (K_VAR1_L),Y          ; get 1st operand byte
+  JSR PrintDollar   
   JSR PrintByte         ; display it
-  LDX #3
+  LDX #4
   JSR PrintSpaces
   JMP ONE
 THREE:
   LDY #1
   LDA (K_VAR1_L),Y          ; get 1st operand byte
+  JSR PrintDollar   
   JSR PrintByte         ; display it
   JSR PrintSpace
   LDY #2
   LDA (K_VAR1_L),Y          ; get 2nd operand byte
+  JSR PrintDollar   
   JSR PrintByte         ; display it
 ONE:
 ;  .endif                ; .ifndef SOURCEONLY
@@ -382,6 +387,7 @@ TRYZPY:
   BNE TRYREL
   LDY #1
   LDA (K_VAR1_L),Y          ; get 1st operand byte (address)
+  JSR PrintDollar   
   JSR PrintByte         ; display it
   JSR PrintCommaY
   JMP DONEOPS

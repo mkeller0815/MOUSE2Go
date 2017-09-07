@@ -521,7 +521,7 @@ TryAbsIndInd:
 InvalidOp:
         JSR PrintCR
         .invoke print InvalidOperand
-        JMP PrintCR             ; Return via caller
+        JMP m_parse_end            ; Return via caller
 
 GenerateCode:
         JSR PrintCR             ; Output newline
@@ -531,7 +531,7 @@ GenerateCode:
 
         .invoke print InvalidAddressMode
 
-        JMP PrintCR             ; Return via caller
+        JMP m_parse_end            ; Return via caller
 
 OperandOkay:
 
@@ -558,7 +558,7 @@ OperandOkay:
         LDX K_VAR1_L
         LDY K_VAR1_H
         JSR PrintAddress
-        JMP PrintCR             ; Return via caller
+        JMP m_parse_end            ; Return via caller
 
 ; Generate code for operands
 
@@ -636,7 +636,7 @@ Relative:
          BEQ OkayFF                 ; Or $FF
 OutOfRange:
          .invoke print BranchOuOfRange
-         JMP PrintCR                ; Return via caller
+         JMP m_parse_end            ; Return via caller
 
 OkayZero:
          LDA OPERAND                ; Low byte
@@ -846,6 +846,10 @@ glloop:
         BEQ EnterPressed        ; If so, handle it
         CMP #ESC                ; <Esc> key pressed?
         BEQ EscapePressed       ; If so, handle it
+        CMP #$24                ; $ pressed
+        BNE next
+        JSR j_wchr
+next:
 
         ; Make sure character is included in the set of filter characters,
         ; otherwise ignore it.
@@ -872,7 +876,7 @@ EscapePressed:
         STA K_BUFFER+1,X              ; Store 0 at end of buffer
         STX K_BUFFER                  ; Store length of string
         RTS                     ; Return
-
+        
 FilterChars:
         .byte 30, "0123456789ABCDEFabcdef#(),XYxy"
 
