@@ -18,11 +18,11 @@
 .scope
 
 m_start:
-.invoke print MS_WELCOME    ; print welcome
+    .invoke print MS_WELCOME    ; print welcome
+m_main:             ; monitor main loop
     jsr m_clear_buffer  ; clear input buffer
     jsr m_show_prompt   ; show initial prompt
 
-m_main:             ; monitor main loop
 
 _wait:
     jsr j_rchr          ; read character
@@ -38,7 +38,7 @@ _wait:
     stx K_BUF_P         ; save buffer pointer
     cpx #K_BUF_LEN      ; check for end of buffer
     beq m_parse         ; if end of buffer -> parse
-    jmp m_main          ; next character
+    jmp _wait          ; next character
 
 m_parse:
                         ; code for parsing commands here
@@ -72,16 +72,14 @@ m_cmdjmp:
     sta K_VAR1_H
     jmp (K_VAR1_L)       ; jump to command
 m_parse_end:
-    jsr m_clear_buffer   ; clear input buffer
-    jsr m_show_prompt    ; show new prompt
-    jmp m_main           ; back to mainloop
+    jmp m_main          ; back to mainloop
 
 .scend
 
 m_cmd_num:
-    .byte   11
+    .byte   12
 m_cmd_list:
-    .byte "acdfghimorv"
+    .byte "acdfghimorsv"
 
 m_cmd_jumptable:
     .word m_cmd_assemble
@@ -94,6 +92,7 @@ m_cmd_jumptable:
     .word m_cmd_memdump
     .word m_cmd_output
     .word m_cmd_reset
+    .word m_cmd_show
     .word m_cmd_vtl2
 
 
@@ -106,6 +105,22 @@ m_cmd_vtl2:
 m_cmd_reset:
     jmp ($fffc)     ; jump to reset vector
 
+
+m_cmd_show:
+    ldx #$02            ; bad hack to skip first blank
+    jsr j_a2b           ; parse high byte
+    sta K_VAR1_H        ; store high byte
+    jsr j_a2b           ; parse low byte
+    sta K_VAR1_L        ; store low byte
+    .invoke linefeed
+    ldx #0
+    lda (K_VAR1_L,X)    ; load value
+    pha
+    jsr j_hex8out       ; show hex value
+    .invoke space
+    pla
+    jsr j_bin8out
+    jmp m_main     ; back to parse
 
 m_cmd_memdump:
     ldx #$02            ; bad hack to skip first blank
@@ -395,5 +410,5 @@ MS_PROMPT:  .byte LINE_END,">",0
 MS_WELCOME: .byte "MOUSE MON V 0.8",LINE_END,LINE_END,0
 MS_CMD_ERROR:   .byte LINE_END,"?unknown command: ",0
 MS_OK:      .byte " OK",0
-MS_HELP1:   .byte   LINE_END,"commands:", LINE_END,"a <addr> - start assembler at address",LINE_END,"c - start microchess", LINE_END,"d <addr> - disassemble from address", LINE_END,"f <addr>:<addr> %val - fill memory with %val", LINE_END,"g <addr> - jump to <addr>", LINE_END,"h - this help",0
-MS_HELP2:   .byte   LINE_END,"i <addr> - input <addr> input data to memory '.' ends the input",LINE_END,"m <addr> %cols %rows - dump memory from address", LINE_END,"o <addr>:<addr> - output memory range", LINE_END,"r - jump to reset vector", LINE_END,"v - start VTL2 language", LINE_END," <addr> - 16bit address, %xx - 8 bit value",0
+MS_HELP1:   .byte   LINE_END,"commands:", LINE_END,"a <addr> - start assembler at address",LINE_END,"c - start microchess", LINE_END,"d <addr> - disassemble from address", LINE_END,"f <addr>:<addr> %val - fill memory with %val", LINE_END,"g <addr> - jump to <addr>", LINE_END,"h - this help",LINE_END,"i <addr> - input <addr> input data to memory '.' ends the input",0
+MS_HELP2:   .byte   LINE_END,"m <addr> %cols %rows - dump memory from address", LINE_END,"o <addr>:<addr> - output memory range", LINE_END,"r - jump to reset vector", LINE_END,"s <addr> - show one byte in hex and binary", LINE_END,"v - start VTL2 language", LINE_END," <addr> - 16bit address, %xx - 8 bit value",0
