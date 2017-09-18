@@ -36,6 +36,9 @@
 
 .alias ROM_START	$e000	; start of kernel rom image
 
+.alias SOFT_NMI     $7FFC   ; soft NMI vector
+.alias SOFT_IRQ     $7FFE   ; soft IRQ vector
+
 ;
 ; Zero Page defines
 ;

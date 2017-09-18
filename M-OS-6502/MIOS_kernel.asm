@@ -280,6 +280,15 @@ k_RESET:
         cli             ; reenable interupts
 	lda #ACIA_MODE	; set serial mode and init ACIA
         jsr acia_init   ; init ACIA
+
+    lda #<k_NMI_END     ; get low addressbyte from NMI rti
+    sta SOFT_NMI        ; store at SOFT_NMI address
+    lda #>k_NMI_END     ; get high addressbyte from NMI rti
+    sta SOFT_NMI+1      ; store at SOFT_NMI address
+    lda #<k_IRQ_END     ; get low addressbyte from IRQ rti
+    sta SOFT_IRQ        ; store at SOFT_IRQ address
+    lda #>k_IRQ_END     ; get high addressbyte from IRQ rti
+    sta SOFT_IRQ+1      ; store at SOFT_IRQ address
 	jmp k_START	; start kernel
 .scend
 
@@ -288,18 +297,27 @@ k_RESET:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;
+; just print out that an NMI was called
 ;
-;
+.scope
 k_NMI:
+    JMP(SOFT_NMI)      ; jump to the address of the "virtual" NMI vector
+k_NMI_END:
     rti
+.scend
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+;
+;
+;
+.scope
 k_IRQ:
+    JMP(SOFT_IRQ)      ; jump to the address of the "virtual" IRQ vector
+k_IRQ_END:
 	rti
-
+.scend
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -313,7 +331,8 @@ k_IRQ:
 ;
 
 k_welcome: .byte LINE_END,"MOUSE 65C02 micro computer (c) 2017",LINE_END,"M-OS V0.3",LINE_END,"READY.",LINE_END,0
-
+k_nmimsg: .byte LINE_END,"NMI called",LINE_END,0
+k_irqmsg: .byte LINE_END,"NMI called",LINE_END,0
 ;
 ; fill ROM to vector table
 ;
