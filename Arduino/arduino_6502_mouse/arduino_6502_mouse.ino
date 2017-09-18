@@ -69,26 +69,21 @@ void setup () {
 void loop () {
   //internal pullup resistor is used for the input pins
   //making them LOW active like the original 6502 pins
-
   //handle NMI
-  if(digitalRead(NMI_pin)) {
-    while(digitalRead(NMI_pin)) { delay(10);  /*hold until pin is released*/ }
-    Serial.println("NMI called");
+  if(!digitalRead(NMI_pin) ) {
+    while(!digitalRead(NMI_pin)) { delay(10); }
     nmi6502();
   }
-
   //handle IRQ
-  if(digitalRead(IRQ_pin)) {
-    while(digitalRead(IRQ_pin)) { delay(10);  /*hold until pin is released*/ }
-    Serial.println("IRQ called");
+  if(!digitalRead(IRQ_pin)) {
+    while(!digitalRead(IRQ_pin)) { delay(10); }
     irq6502();
   }
 
 
   //handle RESET
-  if(digitalRead(RESET_pin)) {
-    while(digitalRead(RESET_pin)) { delay(10);  /*hold until pin is released*/ }
-    Serial.println("RESET called");
+  if(!digitalRead(RESET_pin)) {
+    while(!digitalRead(RESET_pin)) { delay(10); }
     reset6502();
   }
 

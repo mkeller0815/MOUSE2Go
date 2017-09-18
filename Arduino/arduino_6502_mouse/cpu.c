@@ -61,7 +61,6 @@ extern uint8_t getkey();
 
 #define saveaccum(n) a = (uint8_t)((n) & 0x00FF)
 
-
 //flag modifier macros
 #define setcarry() cpustatus |= FLAG_CARRY
 #define clearcarry() cpustatus &= (~FLAG_CARRY)
@@ -98,12 +97,25 @@ int32_t clockticks6502 = 0, clockgoal6502 = 0;
 uint16_t oldpc, ea, reladdr, value, result;
 uint8_t opcode, oldcpustatus, useaccum;
 
+//make $7FFC to $7FFF usable as RAM regardless of ammount of real memory
+//virtual memory for storing NMI and IRQ vectors out of ROM
+// $7FFC is used as NMI vector in M-OS
+// $7FFE is used as IRQ vector in M-OS
+#define SOFT_VECTORS_START   0x7ffc
+#define SOFT_VECTORS_END   0x7fff
+uint8_t SOFT_VECTORS[4];
+
 uint8_t RAM[RAM_SIZE];
 
 uint8_t read6502(uint16_t address) {
   uint16_t BIOSaddr;
   uint8_t tempval = 0;
 
+  //virtual memory for storing NMI and IRQ vectors out of ROM
+  if(address >= SOFT_VECTORS && address <= SOFT_VECTORS_END) {
+    return SOFT_VECTORS[address - SOFT_VECTORS_START];
+  }
+  
   //external hook to read a byte from "outside" from a specific address
   if (address == GETC) { //MOUSE simulated ASCII input
     tempval = getkey();
@@ -121,6 +133,12 @@ uint8_t read6502(uint16_t address) {
 }
 
 void write6502(uint16_t address, uint8_t value) {
+
+  //virtual memory for storing NMI and IRQ vectors out of ROM
+  if(address >= SOFT_VECTORS && address <= SOFT_VECTORS_END) {
+    SOFT_VECTORS[address - SOFT_VECTORS_START] = value;
+  }
+
   if (address < RAM_SIZE) RAM[address] = value;
 
   //external hook to write a byte to the "outside" at a specific address
