@@ -267,28 +267,34 @@ k_ascii2byte:
 ;
 .scope
 k_RESET:
-        sei             ; prevent interupts
-        cld             ; set binary mode
-        ldx #$ff        ; last RAM address for stack
-        txs             ; set stackpointer
+    sei                 ; prevent interupts
+    cld                 ; set binary mode
+    ldx #$ff            ; last RAM address for stack
+    txs                 ; set stackpointer
 
-	lda #$00	; clear memory
-*	sta $0,x	;
-	dex		;
-	bne -		;
+	lda #$00	        ; clear zeropage
+*	sta $0,x	        ;
+	dex		            ;
+	bne -		
 
-        cli             ; reenable interupts
-	lda #ACIA_MODE	; set serial mode and init ACIA
-        jsr acia_init   ; init ACIA
+	lda #ACIA_MODE	    ; set serial mode and init ACIA
+    jsr acia_init       ; init ACIA
+
+                        ; set the soft interrupt vectors
+                        ; to RAM
 
     lda #<k_NMI_END     ; get low addressbyte from NMI rti
     sta SOFT_NMI        ; store at SOFT_NMI address
     lda #>k_NMI_END     ; get high addressbyte from NMI rti
     sta SOFT_NMI+1      ; store at SOFT_NMI address
+
     lda #<k_IRQ_END     ; get low addressbyte from IRQ rti
     sta SOFT_IRQ        ; store at SOFT_IRQ address
     lda #>k_IRQ_END     ; get high addressbyte from IRQ rti
     sta SOFT_IRQ+1      ; store at SOFT_IRQ address
+    
+    cli                 ; reenable interupts
+
 	jmp k_START	; start kernel
 .scend
 
@@ -297,7 +303,8 @@ k_RESET:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;
-; just print out that an NMI was called
+; NMI hook. use soft NMI vector in RAM to make it changeable during runtime
+; a reset sets SOFT_NMI to teh address of k_NMI_END
 ;
 .scope
 k_NMI:
@@ -310,7 +317,8 @@ k_NMI_END:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;
-;
+; IRQ hook. use soft IRQ vector in RAM to make it changeable during runtime
+; a reset sets SOFT_IRQ to teh address of k_IRQ_END
 ;
 .scope
 k_IRQ:
@@ -331,14 +339,12 @@ k_IRQ_END:
 ;
 
 k_welcome: .byte LINE_END,"MOUSE 65C02 micro computer (c) 2017",LINE_END,"M-OS V0.3",LINE_END,"READY.",LINE_END,0
-k_nmimsg: .byte LINE_END,"NMI called",LINE_END,0
-k_irqmsg: .byte LINE_END,"NMI called",LINE_END,0
 ;
 ; fill ROM to vector table
 ;
 
 .advance $fffa
 
-.word k_NMI		; NMI vector
+.word k_NMI		    ; NMI vector
 .word k_RESET		; RESET vector
-.word k_IRQ		; IRQ vector
+.word k_IRQ		    ; IRQ vector

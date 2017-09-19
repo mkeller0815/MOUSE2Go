@@ -21,7 +21,6 @@
 
 #include "rom_image.h"
 
-extern void printhex(uint16_t val);
 extern void serout(uint8_t value);
 extern void clearkey();
 extern uint8_t getkey();
@@ -110,19 +109,18 @@ uint8_t RAM[RAM_SIZE];
 uint8_t read6502(uint16_t address) {
   uint16_t BIOSaddr;
   uint8_t tempval = 0;
-
   //virtual memory for storing NMI and IRQ vectors out of ROM
-  if(address >= SOFT_VECTORS && address <= SOFT_VECTORS_END) {
+  if(address >= SOFT_VECTORS_START && address <= SOFT_VECTORS_END) {
     return SOFT_VECTORS[address - SOFT_VECTORS_START];
   }
-  
+
   //external hook to read a byte from "outside" from a specific address
   if (address == GETC) { //MOUSE simulated ASCII input
     tempval = getkey();
     clearkey();    
     return(tempval);
   }
-
+ 
   if (address >= 0xE000) {
     BIOSaddr = address - 0xE000;
     return(pgm_read_byte_near(BIOS + BIOSaddr));
@@ -131,20 +129,19 @@ uint8_t read6502(uint16_t address) {
   if (address < RAM_SIZE) return(RAM[address]);
   return(0);
 }
-
 void write6502(uint16_t address, uint8_t value) {
-
   //virtual memory for storing NMI and IRQ vectors out of ROM
-  if(address >= SOFT_VECTORS && address <= SOFT_VECTORS_END) {
+  if(address >= SOFT_VECTORS_START && address <= SOFT_VECTORS_END) {
     SOFT_VECTORS[address - SOFT_VECTORS_START] = value;
   }
-
+  
   if (address < RAM_SIZE) RAM[address] = value;
 
   //external hook to write a byte to the "outside" at a specific address
   if (address == PUTC) { //EhBASIC+mouse simulated ASIC output
     serout(value);
   }
+
 }
 
 //a few general functions used by various other functions
@@ -779,10 +776,13 @@ void nmi6502() {
 }
 
 void irq6502() {
-    push16(pc);
-    push8(cpustatus);
-    cpustatus |= FLAG_INTERRUPT;
-    pc = (uint16_t)read6502(0xFFFE) | ((uint16_t)read6502(0xFFFF) << 8);
+    //service irq only if FLAG_INTERRUPT is not set
+    if(!(cpustatus & FLAG_INTERRUPT)) {
+      push16(pc);
+      push8(cpustatus);
+      cpustatus |= FLAG_INTERRUPT;
+      pc = (uint16_t)read6502(0xFFFE) | ((uint16_t)read6502(0xFFFF) << 8);
+    }
 }
 
 #ifdef USE_TIMING

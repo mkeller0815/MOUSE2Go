@@ -595,12 +595,10 @@ $FCD3 | *                            | MIOS_kernel.asm:242
 $FCD3 | k_ascii2byte                 | MIOS_kernel.asm:231
 $FCEC | k_reset                      | MIOS_kernel.asm:269
 $FCF3 | *                            | MIOS_kernel.asm:276
-$FD15 | k_nmi                        | MIOS_kernel.asm:303
-$FD18 | k_nmi_end                    | MIOS_kernel.asm:305
-$FD19 | k_irq                        | MIOS_kernel.asm:316
-$FD1C | k_irq_end                    | MIOS_kernel.asm:318
-$FD1D | k_welcome                    | MIOS_kernel.asm:333
-$FD54 | k_nmimsg                     | MIOS_kernel.asm:334
-$FD61 | k_irqmsg                     | MIOS_kernel.asm:335
+$FD15 | k_nmi                        | MIOS_kernel.asm:310
+$FD18 | k_nmi_end                    | MIOS_kernel.asm:312
+$FD19 | k_irq                        | MIOS_kernel.asm:324
+$FD1C | k_irq_end                    | MIOS_kernel.asm:326
+$FD1D | k_welcome                    | MIOS_kernel.asm:341
 $FFF8 | aciaout                      | MIOS_driver_ACIApy65mon.asm:11
 $FFF9 | aciain                       | MIOS_driver_ACIApy65mon.asm:9
