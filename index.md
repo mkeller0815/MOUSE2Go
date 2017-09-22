@@ -29,13 +29,13 @@ This project uses software kindly provided by others.
 
 The software for the Arduino is mainly the emulator and a C-Header file containing the current ROM image for the 6502 system. 
 
-For details see : [Arduino software](pages/arduino)
+For details see : [Arduino software](/MOUSE2Go/pages/arduino)
 
 ### 1.2 MOUSE Software
 
 MOUSE is the emulated system that is accessible via a serial connection. It runs a small monitor programm for interaction with the system.
 
-For details see : [MOUSE](pages/mouse) or [examples](pages/examples)
+For details see : [MOUSE](pages/mouse) or [examples](/MOUSE2Go/pages/examples)
 
 ## 2.0 Get started
 
