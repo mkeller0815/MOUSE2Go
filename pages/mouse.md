@@ -3,6 +3,9 @@
 The folder "M-OS-6502" contains the 6502 part of this project. The software ist written in assembler and
 can be assembled with the ophis assembler (https://michaelcmartin.github.io/Ophis/)
 
+* TOC
+{:toc}
+
 ## Features
 
  - monitor program 

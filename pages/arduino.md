@@ -1,5 +1,8 @@
 # MOUSE2Go Arduino Software
 
+* TOC
+{:toc}
+
 ## Features
 
  - NMOS 6502 emulated including undocumented opcodes

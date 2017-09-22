@@ -6,13 +6,14 @@ title: Home
 MOUSE2Go - A 6502 computer emulated by an Arduino
 =================================================
 
-## Important note! 
+**Important notes!**
 
 This repository contains software that was not written by me. 
 
-
 There's now a Youtube video about how to get started: [to the video](https://www.youtube.com/watch?v=ITLRDeyFzFY)
 
+* TOC
+{:toc}
 
 ## 1.0 About
 
