@@ -95,7 +95,7 @@ py65mon -i fff9 -o fff8 -m 6502 -r MOUSE_ROM.bin
 
  The reset function sets the vectors to an RTI in ROM on any reset or power on.
 
-#### Addresses used by MIOS routines
+### Addresses used by MIOS routines
 
  if your own programm uses routines of the MIOS (Minimal Input Output System) you
  shoul take care for the following addresses
@@ -120,7 +120,7 @@ py65mon -i fff9 -o fff8 -m 6502 -r MOUSE_ROM.bin
 
  - 0020 - 002F    - input buffer monitor program
  
-#### MIOS jump table
+### MIOS jump table
 
  To prevent problems with programs using MIOS routines you should only call the
  routines with a JSR to the jump table entry instead of calling the funtion directly 

@@ -135,4 +135,161 @@ You can use this to input data from the 'outside world' to the system.
 The command _f_ can be used to fill a memory block with a given byte. It takes a range of two 16bit addresses and a 8bit hex value to set all bytes within the address range with the given value.
 
 
+## Assembler / Disassembler
+
+### Using the disassembler
+
+```
+>d e000 OK
+$e000   $4c $b3 $fc    JMP   $fcb3
+$e003   $4c $c7 $fc    JMP   $fcc7
+$e006   $4c $cb $fc    JMP   $fccb
+$e009   $4c $d3 $fc    JMP   $fcd3
+$e00c   $4c $63 $fc    JMP   $fc63
+$e00f   $4c $76 $fc    JMP   $fc76
+$e012   $4c $83 $fc    JMP   $fc83
+$e015   $4c $a1 $fc    JMP   $fca1
+$e018   $a9 $c6        LDA   #$c6
+$e01a   $85 $00        STA   $00
+$e01c   $a9 $e2        LDA   #$e2
+$e01e   $85 $01        STA   $01
+$e020   $20 $00 $e0    JSR   $e000
+$e023   $20 $22 $e2    JSR   $e222
+$e026   $20 $16 $e2    JSR   $e216
+$e029   $20 $06 $e0    JSR   $e006
+$e02c   $b0 $fb        BCS   $e029
+$e02e   $c9 $0d        CMP   #$0d
+$e030   $f0 $15        BEQ   $e047
+$e032   $c9 $0a        CMP   #$0a
+$e034   $f0 $11        BEQ   $e047
+$e036   $20 $03 $e0    JSR   $e003
+$e039   $a6 $0f        LDX   $0f
+  <SPACE> TO CONTINUE, <ESC> TO STOP
+```
+
+The _d_ command takes an 16bit address as parameter and starts disassembling from this address. The disassembler shows the address, byte values as well as the opcodes with parameters.
+It can handle 6502 and 65C02 opcodes. 
+
+Be aware that it has no knowledge about data in the memory that is no code (strings or a lookup table for instance). If such a memory region is part of the disassembly the output will be messed up, because data will be interpreted as opcodes.
+
+
+### Using the assembler
+
+```
+>a 0400 OK
+0400: LDA #$0a
+0402: JSR $e003
+0405: LDA #$41
+0407: LDX #$1a
+0409: JSR $e003
+040c: ADC #$01
+040e: DEX
+040f: BNE $0409
+0411: JMP $e023
+0414: 
+>g 0400 OK
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+>
+```
+
+The assembler is invoked by the command _a_ followed by an 16bit address. The current address is shown at the start of the line and you can start enter your opcodes. They are parsed during the input. Opcodes without parameters are completed automatically by going to the next line, opcodes with parameters have to be completed with ENTER
+
+Hitting Escape jumps out of the assembler. 
+
+Relative branches are calculated by the assembler, so you have to input the absolute address of the relative branch. (See line $040f in the example)
+
+All inputs are evaluated as hex values, even if you obmit the $ sign. There is no decimal input.
+
+The example uses functions of the MIOS (Minimal Input Output System) to write an character to the serial line (JSR $e003). 
+
+The _JMP $e023_ at the end goes right back to the monitor program. 
+
+Also the command _g_ is used to start the program that was entered. 
+
+
+## Running code
+
+### Execute a program
+
+```
+>g 0400 OK
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+>
+```
+
+The command _g_ takes a 16bit address an makes a _JMP $address_ to start a programm. 
+
+Using the example from the assembler it starts a programm at $0400 (showing all ASCII characters from A to Z in this case)
+
+### Running VTL2
+
+```
+>v OK
+OK
+
+10 A=1
+20 ?=A
+30 A=A+1
+40 #=(A<10)*20
+
+OK
+#=10
+
+123456789
+OK
+```
+
+VTL2 is a simple language (Very Tiny Language) that was ported to the 6502. It has a small memory footprint but is still at a "higher level" compared to plain assembler.
+You can use Variables, can input and output values, make branches and calculate values. 
+
+The example shows a small programm creating a loop from A=1 to A=9 printing the numbers of 1 to 9 on the screen.
+
+More details can be found [here](http://6502.org/source/interpreters/vtl02.htm) and [here](http://www.altair680kit.com/manuals/Altair_680-VTL-2%20Manual-05-Beta_1-Searchable.pdf)
+
+### Running Microchess
+
+```
+>c OK
+MicroChess (c) 1996-2002 Peter Jennings, peterj@benlo.com
+
+ 00 01 02 03 04 05 06 07
+-------------------------
+|BP|  |**|  |**|  |**|  |00
+-------------------------
+|  |**|  |**|  |**|  |**|10
+-------------------------
+|**|  |**|  |**|  |**|  |20
+-------------------------
+|  |**|  |**|  |**|  |**|30
+-------------------------
+|**|  |**|  |**|  |**|  |40
+-------------------------
+|  |**|  |**|  |**|  |**|50
+-------------------------
+|**|  |**|  |**|  |**|  |60
+-------------------------
+|  |**|  |**|  |**|  |**|70
+-------------------------
+ 00 01 02 03 04 05 06 07
+00 00 00
+?
+```
+
+Microchess was written in 1976 for the original KIM-1 by Peter Jennigs who greatful granted me the right to distribute microchess with my 6502 systems.
+
+There's a website describing the history of the program [here](http://www.benlo.com/microchess/index.html)
+
+There is also a complete manual [here](http://www.benlo.com/microchess/Kim-1Microchess.html)
+
+The following keys are used on MOSUE to interact with microchess:
+
+-----------------------------------------------------------------------
+|               Key               |                Key                |
+|---------------------------------------------------------------------|
+|   C    Clear Board              |   1-7           Keys to enter move|
+|   E    Exchange sides           |   (Return)      Register move     |
+|   P    Play                     |                                   |
+|---------------------------------------------------------------------|
+|   W    Toggle Blitz (fast & dumb) / Normal play (100sec/move)       |
+-----------------------------------------------------------------------
 
