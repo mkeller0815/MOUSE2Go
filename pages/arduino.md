@@ -28,10 +28,10 @@ To run the system just open the arduino_6502_mouse.ino file in the Arduino IDE m
 
 ### Updating the ROM Image
 
-In die Arduino folder there is a small shell script called _make_header.sh_ that can be used to update the C-Header file for the ROM image. 
-If you have changed someting in the 6502 code (M-OS-6502 folder) and you created a new ROM image, you need to convert this image (ROMIMAGE.bin) to the rom_image.h file.
+In the Arduino folder there is a small shell script called _make_header.sh_ that can be used to update the C-Header file for the ROM image. 
+If you have changed something in the 6502 code (M-OS-6502 folder) and you created a new ROM image, you need to convert this image (ROMIMAGE.bin) to the rom_image.h file.
 
-The shell script uses the _xxd_ and _sed_ tools to make a ascii hex dump from the image and write it to a correct C syntax header file. 
+The shell script uses the _xxd_ and _sed_ tools to make an ascii hex dump from the image and write it to a correct C syntax header file. 
 Therefore this script only works on Mac OS X and Linux at the moment. 
 
 As long as you do not change anything on the ROM image, the code works also in Windows machines
