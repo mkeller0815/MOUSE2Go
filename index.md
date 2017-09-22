@@ -11,6 +11,9 @@ MOUSE2Go - A 6502 computer emulated by an Arduino
 This repository contains software that was not written by me. 
 
 
+There's now a Youtube video about how to get started: [to the video](https://www.youtube.com/watch?v=ITLRDeyFzFY)
+
+
 ## 1.0 About
 
 MOUSE is an 65C02 based singleboard homebrew computer that
@@ -47,6 +50,8 @@ you have an Arduino with more memory (like a Mega2560 or a Due).
 
 After uploading your sketch, you can connect to the Arduino via a serial terminal (or the serial monitor from
 the IDE) with 9600,8N1 and play with MOUSE. 
+
+There is also a [Youtube video](https://www.youtube.com/watch?v=ITLRDeyFzFY) about getting started.
 
 ### 2.1 Commands 
 
