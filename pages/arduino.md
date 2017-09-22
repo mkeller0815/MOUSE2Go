@@ -13,6 +13,8 @@
  - emulates exact cycle counting on demand
  - shows instructions or cycles per second on demand
 
+There's now a Youtube video about how to get started: [to the video](https://www.youtube.com/watch?v=ITLRDeyFzFY)
+
 ## Main program
 
 The Arduino firmware is located in the Arduino/arduino_6502_mouse/arduino_6502_mouse.ino

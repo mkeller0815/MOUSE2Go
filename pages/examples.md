@@ -282,7 +282,7 @@ There's a website describing the history of the program [here](http://www.benlo.
 There is also a complete manual [here](http://www.benlo.com/microchess/Kim-1Microchess.html)
 
 The following keys are used on MOSUE to interact with microchess:
-
+```
 -----------------------------------------------------------------------
 |               Key               |                Key                |
 |---------------------------------------------------------------------|
@@ -292,4 +292,4 @@ The following keys are used on MOSUE to interact with microchess:
 |---------------------------------------------------------------------|
 |   W    Toggle Blitz (fast & dumb) / Normal play (100sec/move)       |
 -----------------------------------------------------------------------
-
+```

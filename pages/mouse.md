@@ -18,6 +18,8 @@ can be assembled with the ophis assembler (https://michaelcmartin.github.io/Ophi
 
 See [Arduino Software](/MOUSE2Go/pages/arduino) how to flash the emulator on you Arduino board. 
 
+There's now a Youtube video about how to get started: [to the video](https://www.youtube.com/watch?v=ITLRDeyFzFY)
+
 After the firmware is written to the Arduino, just connect with a serial terminal program to the Arduino board using the serrings 9600 baud, 8N1
 
 The connection should cause a reset on the Arduino and you should get the following output:
