@@ -14,45 +14,30 @@ This repository contains software that was not written by me.
 ## 1.0 About
 
 MOUSE is an 65C02 based singleboard homebrew computer that
-is freely available from another repo: [github - MOUSE] (https://github.com/mkeller0815/MOUSE)
+is freely available from another repo: [github - MOUSE](https://github.com/mkeller0815/MOUSE)
 
 To make it easier to ge started with software, MOUSE can now run on a plain Arduino or compatible board. 
 
 This project uses software kindly provided by others.
 
- - 6502 emulator for Arduino by Mike Chambers (http://forum.arduino.cc/index.php?topic=193216.0)
- - microchess by Peter Jennings (http://www.benlo.com/microchess/)
- - VTL2 ported to the 6502 by Mike Barry (http://6502.org/source/interpreters/vtl02.htm)
- - 65C02 assembler/disassembler by Jeff Tranter (https://github.com/jefftranter/6502/tree/master/asm)
+ - 6502 emulator for Arduino by Mike Chambers : [link to Arduino forum](http://forum.arduino.cc/index.php?topic=193216.0)
+ - microchess by Peter Jennings : [microchess](http://www.benlo.com/microchess/)
+ - VTL2 ported to the 6502 by Mike Barry : [VTL2](http://6502.org/source/interpreters/vtl02.htm)
+ - 65C02 assembler/disassembler by Jeff Tranter : [ASM/DASM](https://github.com/jefftranter/6502/tree/master/asm)
 
-## 1.1 Arduino Firmware
+### 1.1 Arduino Firmware
 
-This part is mainly the 6502 emulator running on the Arduino. The sources are located in the 
-"Arduino" folder. The folder "arduino_6502_mouse" contains the whole sketch that can be opened directly
-by the Arduino IDE. 
+The software for the Arduino is mainly the emulator and a C-Header file containing the current ROM image for the 6502 system. 
 
-There is also a shellscript that creates a C header file out of the MOUSE rom image and a symlink to 
-this image itself. 
+For details see : [Arduino software](pages/arduino)
 
-Note: Currently there's only a 6502 emulated, not an 65C02
+### 1.2 MOUSE Software
 
-## 1.2 MOUSE Software
+MOUSE is the emulated system that is accessible of a serial connection. It runs a small monitor programm for interaction with the system.
 
-The folder "M-OS-6502" contains the 6502 part of this project. The software ist written in assembler and 
-can be assembled with the ophis assembler (https://michaelcmartin.github.io/Ophis/)
+For details see : [6502](pages/6502) or [examples](pages/examples)
 
-There's a small shellscript that runs the assembler with all needed options.
-
-Using the lastet version of py65mon (https://github.com/mnaberez/py65) you can run the generated rom image 
-also on your local machine with 
-
-py65mon -i fff9 -o fff8 -m 6502 -r MOUSE_ROM.bin
-
-## 2.0 Wiring 
-
-Currently there's no wiring needed. Everything runs in software
-
-## 3.0 Get started
+## 2.0 Get started
 
 To get started you only need to load the "Arduino/arduino_6502_mouse/arduino_6502_mouse.ino" sketch into
 the Arduino IDE and programm your Arduino. 
@@ -63,7 +48,7 @@ you have an Arduino with more memory (like a Mega2560 or a Due).
 After uploading your sketch, you can connect to the Arduino via a serial terminal (or the serial monitor from
 the IDE) with 9600,8N1 and play with MOUSE. 
 
-## 4.0 Commands 
+### 2.1 Commands 
 
 If your're connected to the emulated system the following commands can be used:
 
