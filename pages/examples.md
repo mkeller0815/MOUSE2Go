@@ -6,6 +6,7 @@ In the monitor program, you can always call "h" for help to get a list of all co
 
 All commands start with a single character. Some of them have also parameters.
 
+* TOC
 {:toc}
 
 ## Show memory
@@ -14,7 +15,7 @@ There are three commands to get a parts of the memory shown.
 
 ### memdump
 
-´´´
+```
 >m e000 10 0a OK
 e000 4c b3 fc 4c c7 fc 4c cb fc 4c d3 fc 4c 63 fc 4c |L..L..L..L..Lc.L|
 e010 76 fc 4c 83 fc 4c a1 fc a9 c6 85 00 a9 e2 85 01 |v.L..L..........|
@@ -26,7 +27,7 @@ e060 e0 48 a9 22 20 03 e0 68 20 03 e0 a9 22 20 03 e0 |.H." ..h ..." ..|
 e070 a9 20 20 03 e0 4c 94 e0 a9 ec 85 00 a9 e2 85 01 |.  ..L..........|
 e080 20 00 e0 8a 0a aa bd a4 e0 85 02 e8 bd a4 e0 85 | ...............|
 e090 03 6c 02 00 4c 23 e0 0c 61 63 64 66 67 68 69 6d |.l..L#..acdfghim|
-´´´
+```
 
 The command _m_ takes three parameters. The first is the address were dumping the memory should start. The second parameter is one byte (hex) giving the number of bytes per line to be shown on the output. And the last paramerer takes the number of lines to be shown. 
 
@@ -36,7 +37,7 @@ The command shows the hex values as well as the ASCII characters (if printable o
 
 ### output memory 
 
-´´´
+```
 >o e000:e09f OK
 4c b3 fc 4c c7 fc 4c cb fc 4c d3 fc 4c 63 fc 4c 
 76 fc 4c 83 fc 4c a1 fc a9 c6 85 00 a9 e2 85 01 
@@ -48,7 +49,7 @@ e0 48 a9 22 20 03 e0 68 20 03 e0 a9 22 20 03 e0
 a9 20 20 03 e0 4c 94 e0 a9 ec 85 00 a9 e2 85 01 
 20 00 e0 8a 0a aa bd a4 e0 85 02 e8 bd a4 e0 85 
 03 6c 02 00 4c 23 e0 0c 61 63 64 66 67 68 69 00.
-´´´
+```
 The command _o_ takes a pair auf 16bit addresses as parameter separated by a ':' to write out a block of memory as hex values.
 A linebreak is printed after 16 bytes and after the last byte a dot ('.') is shown. 
 
@@ -58,10 +59,10 @@ There's a corresponding input command to read such a block back zu memory
 
 ### show byte
 
-´´´
+```
 >s e000 OK
 4c 01001100
-´´´
+```
 
 The command _s_ take a 16bit address as parameter and shows the corresponding byte on this address as hex value as well as binary value
 
@@ -69,7 +70,7 @@ The command _s_ take a 16bit address as parameter and shows the corresponding by
 
 ### input memory
 
-´´´
+```
 >m 0400 10 0a OK
 0400 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
 0410 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
@@ -104,7 +105,7 @@ a9 20 20 03 e0 4c 94 e0 a9 ec 85 00 a9 e2 85 01
 0470 a9 20 20 03 e0 4c 94 e0 a9 ec 85 00 a9 e2 85 01 |.  ..L..........|
 0480 20 00 e0 8a 0a aa bd a4 e0 85 02 e8 bd a4 e0 85 | ...............|
 0490 03 6c 02 00 4c 23 e0 0c 61 63 64 66 67 68 69 00 |.l..L#..acdfghi.|
-´´´
+```
 
 The _i_ command is the opposite to the _o_ command. It takes an 16bit address as parameter and after starting (hit enter) it waits for input. It accepts all whitespaces and CR/LF characters (just ignoring them) and all hex value input. The input is written byte by byte from the starting address until a single dot ('.') is received.
 
@@ -115,7 +116,7 @@ You can use this to input data from the 'outside world' to the system.
 
 ### Filling memory
 
-´´´
+```
 >f 0400:049f ff OK
 
 >m 0400 10 0a OK
@@ -129,7 +130,7 @@ You can use this to input data from the 'outside world' to the system.
 0470 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff |................|
 0480 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff |................|
 0490 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff |................|
-´´´
+```
 
 The command _f_ can be used to fill a memory block with a given byte. It takes a range of two 16bit addresses and a 8bit hex value to set all bytes within the address range with the given value.
 
