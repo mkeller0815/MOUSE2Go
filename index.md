@@ -33,9 +33,9 @@ For details see : [Arduino software](pages/arduino)
 
 ### 1.2 MOUSE Software
 
-MOUSE is the emulated system that is accessible of a serial connection. It runs a small monitor programm for interaction with the system.
+MOUSE is the emulated system that is accessible via a serial connection. It runs a small monitor programm for interaction with the system.
 
-For details see : [6502](pages/6502) or [examples](pages/examples)
+For details see : [MOUSE](pages/mouse) or [examples](pages/examples)
 
 ## 2.0 Get started
 
@@ -62,6 +62,7 @@ If your're connected to the emulated system the following commands can be used:
  - m <addr> %cols %rows - dump memory from address
  - o <addr>:<addr> - output memory range
  - r - jump to reset vector
+ - s <addr> - show one byte of memory as hex and binary  
  - v - start VTL2 language
  <addr> - 16bit address, %xx - 8 bit value
 

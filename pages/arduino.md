@@ -1,3 +1,9 @@
+# MOUSE2Go Arduino Software
+
+## Features
+
+ - 
+
 This part is mainly the 6502 emulator running on the Arduino. The sources are located in the
 "Arduino" folder. The folder "arduino_6502_mouse" contains the whole sketch that can be opened directly
 by the Arduino IDE.

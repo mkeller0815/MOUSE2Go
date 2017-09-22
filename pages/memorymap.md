@@ -1,5 +1,5 @@
 
-# MOUSE2Gi Memorymap
+# MOUSE2Go Memorymap
 
 ## Basic memory regions 
 
@@ -20,7 +20,7 @@
  - $7FFC - $7FFD - soft NMI vector in RAM. Can be used to set own NMI function
  - $7FFE - $7FFF - soft IRQ vector in RAM. Can be used to set own IRQ function
 
- The MIOS kernel has own NMI and IRQ functions that basically do a JMP($FFFC) and JPM($FFFE).
+ The MIOS kernel has own NMI and IRQ functions that basically do a JMP($7FFC) and JPM($7FFE).
  Placing the addresses of you own fuction at the soft vectors, they are executed on any interrupt.
 
  The reset function sets the vectors to an RTI in ROM on any reset or power on.
