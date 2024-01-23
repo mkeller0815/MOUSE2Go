@@ -78,26 +78,28 @@ If your're connected to the emulated system the following commands can be used:
 
 ## 5.0 Memory Map
 
- 0x0000 - 0x00ff    Zeropage
- 0x0100 - 0x01ff    Stack
- 0x0200 - 0x03ff    input buffer used only by VTL2
- 0x0400             start of program memroy for VTL2
- 0x0200 - 0x7ffb    free memory (upper limit depends on Arduino RAM settings)
- 0x7ffc - 0x7ffd    16 bit address used as NMI vector from MIOS kernel (writeable)
- 0x7ffe - 0x7fff    16 bit address used as IRQ vector from MIOS kernel (writeable)
- 0xe000 - 0xffff    ROM
+| Range | Description |
+| - | - |
+| 0x0000 - 0x00ff | Zeropage
+| 0x0100 - 0x01ff | Stack
+| 0x0200 - 0x03ff | input buffer used only by VTL2
+| 0x0400          | start of program memory for VTL2
+| 0x0200 - 0x7ffb | free memory (upper limit depends on Arduino RAM settings)
+| 0x7ffc - 0x7ffd | 16 bit address used as NMI vector from MIOS kernel (writeable)
+| 0x7ffe - 0x7fff | 16 bit address used as IRQ vector from MIOS kernel (writeable)
+| 0xe000 - 0xffff | ROM
  
 ## 6.0 Special Addresses 
 
- 0x7ffc - 0x7ffd    16 bit address used as NMI vector from MIOS kernel (writeable)
- 0x7ffe - 0x7fff    16 bit address used as IRQ vector from MIOS kernel (writeable)
-
- 0xfff8             fake ACIA input register
- 0xfff9             fake ACIA output register
-
- 0xfffa - 0xfffb    6502 NMI vector
- 0xfffc - 0xfffd    6502 RESET vector
- 0xfffe - 0xffff    6502 IRQ vector
+| Address | Description |
+| - | - |
+| 0x7ffc - 0x7ffd | 16 bit address used as NMI vector from MIOS kernel (writeable) |
+| 0x7ffe - 0x7fff | 16 bit address used as IRQ vector from MIOS kernel (writeable) |
+| 0xfff8 | fake ACIA input register |
+| 0xfff9 | fake ACIA output register |
+| 0xfffa - 0xfffb | 6502 NMI vector |
+| 0xfffc - 0xfffd | 6502 RESET vector |
+| 0xfffe - 0xffff | 6502 IRQ vector |
 
 ## 7.0 Using interrupts
 
